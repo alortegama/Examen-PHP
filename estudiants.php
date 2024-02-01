@@ -22,46 +22,47 @@
     <div class="row row-cols-3 row-cols-md-4 g-4">
         <?php
         require 'gestio_estudiants.php';
-        $rows = findAll();
-        foreach ($rows as $estudiant) {
-                ?>
-                <div class="col">
+        $map = findAll();
+        foreach ($map as $estudiant) {
+            ?>
+            <div class="col">
                 <div class="card">
-                <div class="card-header">
-                    <h5 class="card-title text-center"><?= $estudiant->nom; ?></h5>
-                </div>
-                <div class="card-body">
-
-                <div class="row">
-                    <div class="col">Edat: <?= $estudiant->edat; ?></div>
-                    <div class="col">Curs: <?= $estudiant->curs; ?></div>
-                </div>
-                <ul>
-                    <?php
-                    foreach ($estudiant->assignatures as $assignatura){?>
-                      <li>
-                          <?=$assignatura?>
-                      </li>
-
-                   <?php }
-
-                    ?>
-
-            </ul>
-            </div>
-            <div class="card-footer">
-
-                <form method="POST" action="gestio_estudiants.php">
-                    <input type="hidden" name="id" value="<?= $estudiant->id; ?>">
-                    <div class="d-grid gap-2">
-                        <button type="submit" class="btn btn-danger" name="delete"><i
-                                    class="fa-solid fa-trash"></i> Eliminar
-                        </button>
+                    <div class="card-header">
+                        <h5 class="card-title text-center"><?= $estudiant->nom; ?></h5>
                     </div>
-                </form>
+                    <div class="card-body">
 
-            </div>
-            </div>
+                        <div class="row">
+                            <div class="col">Edat: <?= $estudiant->edat; ?></div>
+                            <div class="col">Curs: <?= $estudiant->curs; ?></div>
+                            <div class="col">
+                                <ul>
+                                    <?php
+                                    foreach ($estudiant->assignatures as $assignatura){
+
+                                        ?>
+                                    <li><?=$assignatura?></li>
+                                    <?php
+                                    }
+
+                                    ?>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+
+                        <form method="POST" action="gestio_estudiants.php">
+                            <input type="hidden" name="id" value="<?= $estudiant->id; ?>">
+                            <div class="d-grid gap-2">
+                                <button type="submit" class="btn btn-danger" name="delete"><i
+                                            class="fa-solid fa-trash"></i> Eliminar
+                                </button>
+                            </div>
+                        </form>
+
+                    </div>
+                </div>
             </div>
 
             <?php

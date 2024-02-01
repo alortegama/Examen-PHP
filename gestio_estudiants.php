@@ -18,33 +18,32 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 function findAll()
 {
     $db = connect();
-    $query = "SELECT e.id,e.nom,e.edat,e.curs,a.nom as 'assignatura' FROM estudiants e
-         INNER JOIN assignatures_estudiants ae on e.id = ae.id_estudiant
-         INNER JOIN assignatures a on ae.id_assignatura = a.id
-         ORDER BY e.id;";
+    $query = "SELECT e.id,e.nom, e.edat,e.curs,a.nom as 'nom_assignatura'
+FROM estudiants e
+         INNER JOIN assignatures_estudiants ae
+                    ON (ae.id_estudiant = e.id)
+         INNER JOIN assignatures a ON (ae.id_assignatura = a.id)
+order by e.id";
     $stmt = $db->query($query);
     $rows = $stmt->fetchAll(PDO::FETCH_OBJ);
     $map = array();
-
-    foreach ($rows as $row) {
-        $id = $row->id;
-        $nom = $row->nom;
-        $edat = $row->edat;
-        $curs = $row->curs;
-        $assignatura = $row->assignatura;
-        if (!isset($map[$id])) {
-            $array  = array(
-                "nom" => $nom,
-                "edat" => $edat,
-                "curs" => $curs,
-                "assignatures" => array()
+    foreach ($rows as $row ){
+        if(!isset($map[$row->id])){
+            $estudiant = array(
+                'nom'=> $row->nom,
+                'edat' => $row->edat,
+                'curs' => $row->curs,
+                'assignatures'=>array()
             );
-            $object = (object)$array;
-            $map[$id] = $object;
+            $object = (object)$estudiant;
+            $map[$row->id] = $object;
         }
-        array_push($map[$id]->assignatures, $assignatura);
+        array_push($map[$row->id]->assignatures,$row->nom_assignatura);
     }
+
     return $map;
+
+
 }
 
 function insert($nom, $cognom, $edat, $curs)
