@@ -30,6 +30,78 @@ order by e.id";
     foreach ($rows as $row ){
         if(!isset($map[$row->id])){
             $estudiant = array(
+                'id'=>$row->id,
+                'nom'=> $row->nom,
+                'edat' => $row->edat,
+                'curs' => $row->curs,
+                'assignatures'=>array()
+            );
+            $object = (object)$estudiant;
+            $map[$row->id] = $object;
+        }
+        array_push($map[$row->id]->assignatures,$row->nom_assignatura);
+    }
+
+    return $map;
+
+
+}
+
+
+function findAllByCurs($curs)
+{
+    $db = connect();
+    $query = "SELECT e.id,e.nom, e.edat,e.curs,a.nom as 'nom_assignatura'
+FROM estudiants e
+         INNER JOIN assignatures_estudiants ae
+                    ON (ae.id_estudiant = e.id)
+         INNER JOIN assignatures a ON (ae.id_assignatura = a.id)
+WHERE e.curs = ?
+order by e.id";
+    $stmt = $db->prepare($query);
+    $stmt->bindParam(1,$curs);
+    $stmt->execute();
+    $rows = $stmt->fetchAll(PDO::FETCH_OBJ);
+    $map = array();
+    foreach ($rows as $row ){
+        if(!isset($map[$row->id])){
+            $estudiant = array(
+                'id'=>$row->id,
+                'nom'=> $row->nom,
+                'edat' => $row->edat,
+                'curs' => $row->curs,
+                'assignatures'=>array()
+            );
+            $object = (object)$estudiant;
+            $map[$row->id] = $object;
+        }
+        array_push($map[$row->id]->assignatures,$row->nom_assignatura);
+    }
+
+    return $map;
+
+
+}
+
+
+function findAllById($id)
+{
+    $db = connect();
+    $query = "SELECT e.id,e.nom, e.edat,e.curs,a.nom as 'nom_assignatura'
+FROM estudiants e
+         INNER JOIN assignatures_estudiants ae
+                    ON (ae.id_estudiant = e.id)
+         INNER JOIN assignatures a ON (ae.id_assignatura = a.id)
+WHERE e.id = ?";
+    $stmt = $db->prepare($query);
+    $stmt->bindParam(1,$id);
+    $stmt->execute();
+    $rows = $stmt->fetchAll(PDO::FETCH_OBJ);
+    $map = array();
+    foreach ($rows as $row ){
+        if(!isset($map[$row->id])){
+            $estudiant = array(
+                'id'=>$row->id,
                 'nom'=> $row->nom,
                 'edat' => $row->edat,
                 'curs' => $row->curs,

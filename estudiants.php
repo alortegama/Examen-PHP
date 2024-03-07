@@ -16,19 +16,39 @@
 <body>
 <div class="container">
     <h1 class="text-primary">Gestió estudiants</h1>
+
+    <div class="row">
+        <div class="col"><a href="estudiants.php">Tots</a></div>
+        <div class="col"><a href="?curs=Curs1">1r</a></div>
+        <div class="col"><a href="?curs=Curs2">2n</a></div>
+        <div class="col"><a href="?curs=Curs3">3r</a></div>
+        <div class="col"><a href="?curs=Curs4">4t</a></div>
+    </div>
     <a href="estudiants_form.php">Crear un nou estudiant</a>
 
 
     <div class="row row-cols-3 row-cols-md-4 g-4">
         <?php
         require 'gestio_estudiants.php';
-        $map = findAll();
+        if (isset($_GET['curs'])) {
+            $curs = $_GET['curs'];
+            $map = findAllByCurs($curs);
+        } elseif (isset($_GET['id_estudiant'])) {
+            $id = $_GET['id_estudiant'];
+            $map = findAllById($id);
+        } else {
+
+            $map = findAll();
+        }
         foreach ($map as $estudiant) {
             ?>
             <div class="col">
                 <div class="card">
                     <div class="card-header">
-                        <h5 class="card-title text-center"><?= $estudiant->nom; ?></h5>
+
+                        <a href="detall_estudiant.php?id_estudiant=<?= $estudiant->id ?>">
+                            <h5 class="card-title text-center"><?= $estudiant->nom; ?></h5>
+                        </a>
                     </div>
                     <div class="card-body">
 
@@ -38,11 +58,11 @@
                             <div class="col">
                                 <ul>
                                     <?php
-                                    foreach ($estudiant->assignatures as $assignatura){
+                                    foreach ($estudiant->assignatures as $assignatura) {
 
                                         ?>
-                                    <li><?=$assignatura?></li>
-                                    <?php
+                                        <li><?= $assignatura ?></li>
+                                        <?php
                                     }
 
                                     ?>
